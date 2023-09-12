@@ -1,4 +1,5 @@
 {
   "accel": "accel_3d",
-  "touchscreen_id": "11"
+  "name_display": "eDP-1",
+  "touchscreen_id": "13"
 }

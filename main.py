@@ -29,6 +29,7 @@ def parse_config(arguments):
     json_conf = json.load(f)
     return json_conf
 
+
 class Arguments:
     """Class for parsing the input arguments."""
 
@@ -91,6 +92,24 @@ class DataReader:
         scale_value = channel.attrs['scale'].value
         return np.float64(raw_value) * np.float64(scale_value)
 
+# def read_config_(config):
+#     xinput_output = subprocess.check_output(["xinput"])
+#     xinput_output = xinput_output.decode("utf-8")
+#
+#     for line in xinput_output.split('\n'):
+#         if "Wacom HID 484E Finger touch" in line:
+#             parts = line.split()
+#             for part in parts:
+#                 if part.startswith("id="):
+#                     wacom_id = int(part[3:])
+#                     break
+#
+#     data = {"touchscreen_id": wacom_id}
+#
+#     # Записываем JSON объект в файл
+#     json_file = open("package.json", "w", encoding='utf-8')
+#     json.dump(data, json_file, indent=4)
+
 
 def rotate(config, accel):
     """Изменяем поворот экрана и матрицу координат"""
@@ -98,21 +117,28 @@ def rotate(config, accel):
     y = accel[1]
 
     touchscreen_id = config['touchscreen_id']
+    name_display = config['name_display']
+    # subprocess.run(f"echo '{"id":'$(xinput | grep "Wacom HID 484E Finger touch" | awk '{print $8}' | sed 's/id=//')'}' > output.json)
 
     if (-6.0 <= x <= 6.0) and (-9.0 <= y <= -0.5):
-        subprocess.run(f'xrandr -o normal', shell=True)
+        logger.debug('поворот экрана normal')
+        subprocess.run(f'xrandr --output {name_display} --rotate normal', shell=True)
         subprocess.run(f"xinput set-prop {touchscreen_id} 'Coordinate Transformation Matrix' 1 0 0 0 1 0 0 0 1", shell=True)
         logger.debug('normal')
+        # file.write(f'normal:')
     elif (5.0 <= x <= 10.0) and (-5.0 <= y <= -0.2):
-        subprocess.run(f"xrandr -o left", shell=True)
+        logger.debug('поворот экрана left')
+        subprocess.run(f"xrandr --output {name_display} --rotate left", shell=True)
         subprocess.run(f"xinput set-prop {touchscreen_id} 'Coordinate Transformation Matrix' 0 -1 1 1 0 0 0 0 1", shell=True)
         logger.debug('left')
     elif (-9.0 <= x <= -2.0) and (-7.0 <= y <= 6.0):
-        subprocess.run(f"xrandr -o right", shell=True)
+        logger.debug('поворот экрана right')
+        subprocess.run(f"xrandr --output {name_display} --rotate right", shell=True)
         subprocess.run(f"xinput set-prop {touchscreen_id} 'Coordinate Transformation Matrix' 0 1 0 -1 0 1 0 0 1", shell=True)
         logger.debug('right')
     elif (-6.0 <= x <= 6.0) and (2.0 <= y <= 10.0):
-        subprocess.run(f"xrandr -o inverted", shell=True)
+        logger.debug('поворот экрана inverted')
+        subprocess.run(f"xrandr --output {name_display} --rotate inverted", shell=True)
         subprocess.run(f"xinput set-prop {touchscreen_id} 'Coordinate Transformation Matrix' -1 0 1 0 -1 1 0 0 1", shell=True)
         logger.debug('inverted')
 
@@ -126,6 +152,7 @@ def main():
     config = parse_config(arguments)
 
     reader = DataReader(ctx, config)
+
 
     """ Если пользователь указал файл логирования, то логируем в него """
     if arguments.log_file is not None:
