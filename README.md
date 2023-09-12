@@ -1,4 +1,4 @@
-## Install Python 3.11
+## Установка Python 3.11
 ``` sudo apt-get install python 3.11 ```
 
 ## Запуск
