@@ -20,9 +20,9 @@ python3 rotate_display.py
   "touchscreen_id": "13"
 }
 ```
-* accel: название акселерометра. Можно получить с помощью команды ```iio_info | grep accel```;
-* name_display: название дисплея, который собираемся вращать. Можно узнать с помошью команды  ```xrandr ```;
-* touchscreen_id: идентификатор тачскрина. Посмотреть можно с помощью команды ```xinput | grep "Wacom HID 484E Finger touch" | awk '{print $8}' | sed 's/id=//'```.
+* `accel`: название акселерометра. Можно получить с помощью команды ```iio_info | grep accel```;
+* `name_display`: название дисплея, который собираемся вращать. Можно узнать с помошью команды  ```xrandr ```;
+* `touchscreen_id`: идентификатор тачскрина. Посмотреть можно с помощью команды ```xinput | grep "Wacom HID 484E Finger touch" | awk '{print $8}' | sed 's/id=//'```.
  
  
  
